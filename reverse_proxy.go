@@ -1,4 +1,4 @@
-// Heavily modified version of the original golang HTTP reverse proxy handler
+// Modified version of the original golang HTTP reverse proxy handler
 // Added support for Filter functions
 
 // Copyright 2011 The Go Authors. All rights reserved.
