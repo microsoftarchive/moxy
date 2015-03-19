@@ -1,7 +1,9 @@
 package moxy
 
 import (
+	"net"
 	"net/http"
+	"time"
 )
 
 type Transport struct {
@@ -15,9 +17,14 @@ func NewClient() *http.Client {
 
 func NewTransport() *Transport {
 	tr := &http.Transport{
-		DisableKeepAlives:   true,
-		MaxIdleConnsPerHost: 100000,
-		DisableCompression:  true,
+		DisableKeepAlives:     true,
+		MaxIdleConnsPerHost:   100000,
+		DisableCompression:    true,
+		ResponseHeaderTimeout: 30 * time.Second,
+		Dial: (&net.Dialer{
+			Timeout:   30 * time.Second,
+			KeepAlive: 30 * time.Second,
+		}).Dial,
 	}
 	return &Transport{tr: tr}
 }
