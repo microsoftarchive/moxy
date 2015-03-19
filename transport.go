@@ -6,15 +6,20 @@ import (
 	"time"
 )
 
+// Transport wraps http.Transport to be able to instrument client calls
+// This is required for keeping metrics on outgoing http requests made by the reverse-proxy
 type Transport struct {
 	tr *http.Transport
 }
 
+// NewClient creates a http.Client for making outgoing requests
+// It uses an instance of our custom Transport
 func NewClient() *http.Client {
 	transport := NewTransport()
 	return &http.Client{Transport: transport}
 }
 
+// NewTransport creates an instance of Transport with some opinionated defaults
 func NewTransport() *Transport {
 	tr := &http.Transport{
 		DisableKeepAlives:     true,
@@ -29,7 +34,8 @@ func NewTransport() *Transport {
 	return &Transport{tr: tr}
 }
 
-func (t *Transport) RoundTrip(request *http.Request) (response *http.Response, err error) {
-	response, err = t.tr.RoundTrip(request)
-	return
+// RoundTrip implements the RoundTripper interface.
+// This is required to make the transport work
+func (t *Transport) RoundTrip(request *http.Request) (*http.Response, error) {
+	return t.tr.RoundTrip(request)
 }

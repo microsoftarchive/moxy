@@ -17,6 +17,8 @@ import (
 	"time"
 )
 
+// FilterFunc is a function that is called to process a proxy response
+// Since it has handle to the response object, it can manipulate the content
 type FilterFunc func(*http.Request, *http.Response)
 
 // onExitFlushLoop is a callback set by tests to detect the state of the
